@@ -13,6 +13,7 @@ import { CollectionDto } from '../dtos/collection.dto';
 import { FilterDto } from '../dtos/filter.dto';
 import { filterDate } from '../utils/filter-date';
 import { AuthGuard } from '../auth/auth.guard';
+import { validate } from 'class-validator';
 
 @Controller('collection')
 export class CollectionController {
@@ -21,11 +22,6 @@ export class CollectionController {
   @Post()
   @UseGuards(AuthGuard)
   async save(@Body() dto: CollectionDto) {
-    if (!dto.id) {
-      throw new UnprocessableEntityException(
-        'Needs to pass the id of the currency!',
-      );
-    }
     return await this.collectionService.save(dto);
   }
 

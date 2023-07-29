@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as md5 from 'md5';
 import { NotFoundError } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
+import { UserDto } from '../dtos/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +19,7 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(user: Partial<UsersEntity>) {
+  async create(user: UserDto) {
     const exist = await this.userRepository.exist({
       where: { email: user.email },
     });
@@ -27,7 +28,13 @@ export class UsersService {
     }
 
     user.password = md5(`${user.password}:${user.email}`);
-    return await this.userRepository.save(user);
+    const newUser: Partial<UsersEntity> = {
+      email: user.email,
+      password: user.password,
+      name: user.name,
+      isAdmin: user.isAdmin,
+    };
+    return await this.userRepository.save(newUser);
   }
 
   async login(login: { email: string; password: string }) {

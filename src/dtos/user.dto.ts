@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsBooleanString,
   IsEmail,
   IsOptional,
@@ -19,7 +20,17 @@ export class UserDto {
   @MaxLength(16)
   password: string;
 
-  @IsBooleanString()
+  @IsBoolean()
   @IsOptional()
-  isAdmin?: string;
+  isAdmin?: boolean;
+}
+
+export class UserLoginDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @MinLength(7)
+  @MaxLength(16)
+  password: string;
 }

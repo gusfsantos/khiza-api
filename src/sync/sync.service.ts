@@ -18,7 +18,7 @@ export class SyncService {
     const collectionsSync = Array.from(new Set(syncs));
     const collectionsToUpdate: Promise<void>[] = [];
     collectionsSync.map((data) => {
-      const collection = data.data.collections[0];
+      const collection = data.collections[0];
       const collectionSave: Partial<CollectionEntity> = {
         dayThirtyFloorSaleChange: collection.floorSaleChange['30day'],
         dayThirty: collection.floorSale['30day'],

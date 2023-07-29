@@ -14,11 +14,14 @@ export class ReservoirService {
   }
 
   async getMany(ids: string[]) {
-    const requests: Promise<AxiosResponse<CollectionSyncDto>>[] = [];
-    ids.map((id) => {
-      requests.push(this.http.axiosRef.get<CollectionSyncDto>(`?id=${id}`));
-    });
+    const requests: CollectionSyncDto[] = [];
+    for (const id of ids) {
+      const collections = await this.http.axiosRef.get<CollectionSyncDto>(
+        `?id=${id}`,
+      );
+      requests.push(collections.data);
+    }
 
-    return await Promise.all(requests);
+    return requests;
   }
 }
