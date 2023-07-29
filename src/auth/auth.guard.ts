@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UsersEntity } from '../entities/users.entity';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,11 +17,18 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException();
     }
+    let user: UsersEntity;
     try {
-      request['user'] = await this.jwtService.verifyAsync(token, {
-        secret: 'HardCode',
-      });
+      user = (
+        await this.jwtService.verifyAsync(token, {
+          secret: 'HardCode',
+        })
+      ).payload;
     } catch {
+      throw new UnauthorizedException();
+    }
+
+    if (!user.isAdmin) {
       throw new UnauthorizedException();
     }
     return true;
